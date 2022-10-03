@@ -1,0 +1,577 @@
+1                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+NOTE: Copyright (c) 2016 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software 9.4 (TS1M6) 
+      Licensed to RHO INCORPORATED NODE 1-4, Site 70170299.
+NOTE: This session is executing on the X64_SR12R2  platform.
+
+
+
+NOTE: Analytical products:
+      
+      SAS/STAT 15.1
+      SAS/IML 15.1
+
+NOTE: Additional host information:
+
+ X64_SR12R2 WIN 6.3.9600  Server
+
+NOTE: SAS initialization used:
+      real time           0.08 seconds
+      cpu time            0.07 seconds
+      
+NOTE: Libref SASDATA successfully assigned from logical server.
+NOTE: Libref STPSAMP successfully assigned from logical server.
+NOTE: Libref SASTST94 successfully assigned from logical server.
+NOTE: Libref SASTST94 refers to the same physical library as SASHELP.
+
+NOTE: AUTOEXEC processing beginning; file is \\drive_i\SAS94GridConfig\Lev1\SASAppPGRD94\appserver_autoexec.sas.
+
+
+NOTE: AUTOEXEC processing completed.
+
+1          
+2          proc import datafile='H:/qlq-c30_data_l.csv'
+3                      out=qlq_c30_data_l replace;
+4          run;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+5           /**********************************************************************
+6           *   PRODUCT:   SAS
+7           *   VERSION:   9.4
+8           *   CREATOR:   External File Interface
+9           *   DATE:      26SEP22
+10          *   DESC:      Generated SAS Datastep Code
+11          *   TEMPLATE SOURCE:  (None Specified.)
+12          ***********************************************************************/
+13             data WORK.QLQ_C30_DATA_L    ;
+14             %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+15             infile 'H:/qlq-c30_data_l.csv' delimiter = ',' MISSOVER DSD lrecl=32767 firstobs=2 ;
+16                informat USUBJID $7. ;
+17                informat ARM $16. ;
+18                informat AVISIT $6. ;
+19                informat AVISITN best32. ;
+20                informat AVISIT_N best32. ;
+21                informat AVISIT_F best32. ;
+22                informat variable_name $2. ;
+23                informat value best32. ;
+24                format USUBJID $7. ;
+25                format ARM $16. ;
+2                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+26                format AVISIT $6. ;
+27                format AVISITN best12. ;
+28                format AVISIT_N best12. ;
+29                format AVISIT_F best12. ;
+30                format variable_name $2. ;
+31                format value best12. ;
+32             input
+33                         USUBJID  $
+34                         ARM  $
+35                         AVISIT  $
+36                         AVISITN
+37                         AVISIT_N
+38                         AVISIT_F
+39                         variable_name  $
+40                         value
+41             ;
+42             if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+43             run;
+
+NOTE: The infile 'H:/qlq-c30_data_l.csv' is:
+      Filename=H:\qlq-c30_data_l.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=2427248,
+      Last Modified=26Sep2022:17:09:02,
+      Create Time=26Sep2022:19:14:53
+
+NOTE: 51000 records were read from the infile 'H:/qlq-c30_data_l.csv'.
+      The minimum record length was 38.
+      The maximum record length was 50.
+NOTE: The data set WORK.QLQ_C30_DATA_L has 51000 observations and 8 variables.
+NOTE: Compressing data set WORK.QLQ_C30_DATA_L decreased size by 4.00 percent. 
+      Compressed is 48 pages; un-compressed would require 50 pages.
+NOTE: DATA statement used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+51000 rows created in WORK.QLQ_C30_DATA_L from H:/qlq-c30_data_l.csv.
+  
+  
+  
+NOTE: WORK.QLQ_C30_DATA_L data set was successfully created.
+NOTE: The data set WORK.QLQ_C30_DATA_L has 51000 observations and 8 variables.
+NOTE: PROCEDURE IMPORT used (Total process time):
+      real time           0.15 seconds
+      cpu time            0.15 seconds
+      
+
+44         
+45         proc sort data=qlq_c30_data_l;
+46          by variable_name USUBJID AVISIT_N;
+47         run;
+
+NOTE: There were 51000 observations read from the data set WORK.QLQ_C30_DATA_L.
+NOTE: The data set WORK.QLQ_C30_DATA_L has 51000 observations and 8 variables.
+NOTE: Compressing data set WORK.QLQ_C30_DATA_L decreased size by 4.00 percent. 
+      Compressed is 48 pages; un-compressed would require 50 pages.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.03 seconds
+3                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+      cpu time            0.03 seconds
+      
+
+48         
+49         PROC GENMOD data = qlq_c30_data_l ;
+50          BAYES NBI=1000 NMC=10000 THINNING=5 SEED=123 OUTPOST=qlqc30_data_post PLOTS=NONE;
+51          BY variable_name;
+52          /* WHERE variable_name = 'QL'; */
+53          CLASS USUBJID AVISIT_N ARM;
+54          MODEL value = AVISIT_N*ARM / NOINT;
+55          REPEATED SUBJECT=USUBJID / type=ar(1);
+56          LSMEANS AVISIT_N*ARM;
+57         run;
+
+NOTE: The REPEATED statement is ignored for a Bayesian analysis.
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000000 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000001 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000002 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=AP
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000003 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000004 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000005 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=CF
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000006 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000007 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000008 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=CO
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+4                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+NOTE: Compressing data set WORK._OPNTMP000000000000000000009 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000010 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000011 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=DI
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000012 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000013 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000014 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=DY
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000015 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000016 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000017 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=EF
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000018 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000019 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000020 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=FA
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000021 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000022 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000023 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+5                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=FI
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000024 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000025 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000026 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=NV
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000027 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000028 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000029 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=PA
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000030 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000031 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000032 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=PF
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000033 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000034 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000035 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=QL
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+6                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000036 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000037 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000038 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=RF
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000039 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000040 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000041 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=SF
+NOTE: Class levels for some variables were not printed due to excessive size.
+NOTE: Algorithm converged.
+NOTE: The scale parameter was estimated by maximum likelihood.
+NOTE: Algorithm converged.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000042 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000043 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: Compressing data set WORK._OPNTMP000000000000000000044 increased size by 10.00 percent. 
+      Compressed is 11 pages; un-compressed would require 10 pages.
+NOTE: The structure of the LSMeans table has changed from an earlier release of SAS.
+NOTE: The above message was for the following BY group:
+      variable_name=SL
+NOTE: The data set WORK.QLQC30_DATA_POST has 30000 observations and 40 variables.
+NOTE: Compressing data set WORK.QLQC30_DATA_POST decreased size by 0.00 percent. 
+      Compressed is 148 pages; un-compressed would require 148 pages.
+NOTE: The PROCEDURE GENMOD printed pages 1-270.
+NOTE: PROCEDURE GENMOD used (Total process time):
+      real time           5.04 seconds
+      cpu time            5.00 seconds
+      
+
+58         
+59         proc export data=qlqc30_data_post
+60          outfile='H:/qlq-c30_bayes.csv' replace;
+61         run;
+
+NOTE: Unable to open parameter catalog: SASUSER.PARMS.PARMS.SLIST in update mode. Temporary parameter values will be saved to 
+WORK.PARMS.PARMS.SLIST.
+62          /**********************************************************************
+63          *   PRODUCT:   SAS
+64          *   VERSION:   9.4
+65          *   CREATOR:   External File Interface
+66          *   DATE:      26SEP22
+67          *   DESC:      Generated SAS Datastep Code
+7                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+68          *   TEMPLATE SOURCE:  (None Specified.)
+69          ***********************************************************************/
+70             data _null_;
+71             %let _EFIERR_ = 0; /* set the ERROR detection macro variable */
+72             %let _EFIREC_ = 0;     /* clear export record count macro variable */
+73             file 'H:/qlq-c30_bayes.csv' delimiter=',' DSD DROPOVER lrecl=32767;
+74             if _n_ = 1 then        /* write column names or labels */
+75              do;
+76                put
+77                   "variable_name"
+78                ','
+79                   "Iteration"
+80                ','
+81                   "Intercept"
+82                ','
+83                   "AVISIT_N0ARMExperimental"
+84                ','
+85                   "AVISIT_N0ARMStandard_of_Care"
+86                ','
+87                   "AVISIT_N3ARMExperimental"
+88                ','
+89                   "AVISIT_N3ARMStandard_of_Care"
+90                ','
+91                   "AVISIT_N6ARMExperimental"
+92                ','
+93                   "AVISIT_N6ARMStandard_of_Care"
+94                ','
+95                   "AVISIT_N9ARMExperimental"
+96                ','
+97                   "AVISIT_N9ARMStandard_of_Care"
+98                ','
+99                   "AVISIT_N12ARMExperimental"
+100               ','
+101                  "AVISIT_N12ARMStandard_of_Care"
+102               ','
+103                  "AVISIT_N15ARMExperimental"
+104               ','
+105                  "AVISIT_N15ARMStandard_of_Care"
+106               ','
+107                  "AVISIT_N18ARMExperimental"
+108               ','
+109                  "AVISIT_N18ARMStandard_of_Care"
+110               ','
+111                  "AVISIT_N21ARMExperimental"
+112               ','
+113                  "AVISIT_N21ARMStandard_of_Care"
+114               ','
+115                  "AVISIT_N24ARMExperimental"
+116               ','
+117                  "AVISIT_N24ARMStandard_of_Care"
+118               ','
+119                  "AVISIT_N27ARMExperimental"
+120               ','
+121                  "AVISIT_N27ARMStandard_of_Care"
+122               ','
+123                  "AVISIT_N30ARMExperimental"
+124               ','
+125                  "AVISIT_N30ARMStandard_of_Care"
+8                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+126               ','
+127                  "AVISIT_N33ARMExperimental"
+128               ','
+129                  "AVISIT_N33ARMStandard_of_Care"
+130               ','
+131                  "AVISIT_N36ARMExperimental"
+132               ','
+133                  "AVISIT_N36ARMStandard_of_Care"
+134               ','
+135                  "AVISIT_N39ARMExperimental"
+136               ','
+137                  "AVISIT_N39ARMStandard_of_Care"
+138               ','
+139                  "AVISIT_N42ARMExperimental"
+140               ','
+141                  "AVISIT_N42ARMStandard_of_Care"
+142               ','
+143                  "AVISIT_N45ARMExperimental"
+144               ','
+145                  "AVISIT_N45ARMStandard_of_Care"
+146               ','
+147                  "AVISIT_N48ARMExperimental"
+148               ','
+149                  "AVISIT_N48ARMStandard_of_Care"
+150               ','
+151                  "Dispersion"
+152               ','
+153                  "LogLike"
+154               ','
+155                  "LogPost"
+156               ;
+157             end;
+158           set  QLQC30_DATA_POST   end=EFIEOD;
+159               format variable_name $2. ;
+160               format Iteration 8. ;
+161               format Intercept best8. ;
+162               format AVISIT_N0ARMExperimental best8. ;
+163               format AVISIT_N0ARMStandard_of_Care best8. ;
+164               format AVISIT_N3ARMExperimental best8. ;
+165               format AVISIT_N3ARMStandard_of_Care best8. ;
+166               format AVISIT_N6ARMExperimental best8. ;
+167               format AVISIT_N6ARMStandard_of_Care best8. ;
+168               format AVISIT_N9ARMExperimental best8. ;
+169               format AVISIT_N9ARMStandard_of_Care best8. ;
+170               format AVISIT_N12ARMExperimental best8. ;
+171               format AVISIT_N12ARMStandard_of_Care best8. ;
+172               format AVISIT_N15ARMExperimental best8. ;
+173               format AVISIT_N15ARMStandard_of_Care best8. ;
+174               format AVISIT_N18ARMExperimental best8. ;
+175               format AVISIT_N18ARMStandard_of_Care best8. ;
+176               format AVISIT_N21ARMExperimental best8. ;
+177               format AVISIT_N21ARMStandard_of_Care best8. ;
+178               format AVISIT_N24ARMExperimental best8. ;
+179               format AVISIT_N24ARMStandard_of_Care best8. ;
+180               format AVISIT_N27ARMExperimental best8. ;
+181               format AVISIT_N27ARMStandard_of_Care best8. ;
+182               format AVISIT_N30ARMExperimental best8. ;
+183               format AVISIT_N30ARMStandard_of_Care best8. ;
+9                                                          The SAS System                           19:23 Monday, September 26, 2022
+
+184               format AVISIT_N33ARMExperimental best8. ;
+185               format AVISIT_N33ARMStandard_of_Care best8. ;
+186               format AVISIT_N36ARMExperimental best8. ;
+187               format AVISIT_N36ARMStandard_of_Care best8. ;
+188               format AVISIT_N39ARMExperimental best8. ;
+189               format AVISIT_N39ARMStandard_of_Care best8. ;
+190               format AVISIT_N42ARMExperimental best8. ;
+191               format AVISIT_N42ARMStandard_of_Care best8. ;
+192               format AVISIT_N45ARMExperimental best8. ;
+193               format AVISIT_N45ARMStandard_of_Care best8. ;
+194               format AVISIT_N48ARMExperimental best8. ;
+195               format AVISIT_N48ARMStandard_of_Care best8. ;
+196               format Dispersion best8. ;
+197               format LogLike best8. ;
+198               format LogPost best8. ;
+199             do;
+200               EFIOUT + 1;
+201               put variable_name $ @;
+202               put Iteration @;
+203               put Intercept @;
+204               put AVISIT_N0ARMExperimental @;
+205               put AVISIT_N0ARMStandard_of_Care @;
+206               put AVISIT_N3ARMExperimental @;
+207               put AVISIT_N3ARMStandard_of_Care @;
+208               put AVISIT_N6ARMExperimental @;
+209               put AVISIT_N6ARMStandard_of_Care @;
+210               put AVISIT_N9ARMExperimental @;
+211               put AVISIT_N9ARMStandard_of_Care @;
+212               put AVISIT_N12ARMExperimental @;
+213               put AVISIT_N12ARMStandard_of_Care @;
+214               put AVISIT_N15ARMExperimental @;
+215               put AVISIT_N15ARMStandard_of_Care @;
+216               put AVISIT_N18ARMExperimental @;
+217               put AVISIT_N18ARMStandard_of_Care @;
+218               put AVISIT_N21ARMExperimental @;
+219               put AVISIT_N21ARMStandard_of_Care @;
+220               put AVISIT_N24ARMExperimental @;
+221               put AVISIT_N24ARMStandard_of_Care @;
+222               put AVISIT_N27ARMExperimental @;
+223               put AVISIT_N27ARMStandard_of_Care @;
+224               put AVISIT_N30ARMExperimental @;
+225               put AVISIT_N30ARMStandard_of_Care @;
+226               put AVISIT_N33ARMExperimental @;
+227               put AVISIT_N33ARMStandard_of_Care @;
+228               put AVISIT_N36ARMExperimental @;
+229               put AVISIT_N36ARMStandard_of_Care @;
+230               put AVISIT_N39ARMExperimental @;
+231               put AVISIT_N39ARMStandard_of_Care @;
+232               put AVISIT_N42ARMExperimental @;
+233               put AVISIT_N42ARMStandard_of_Care @;
+234               put AVISIT_N45ARMExperimental @;
+235               put AVISIT_N45ARMStandard_of_Care @;
+236               put AVISIT_N48ARMExperimental @;
+237               put AVISIT_N48ARMStandard_of_Care @;
+238               put Dispersion @;
+239               put LogLike @;
+240               put LogPost ;
+241               ;
+10                                                         The SAS System                           19:23 Monday, September 26, 2022
+
+242             end;
+243            if _ERROR_ then call symputx('_EFIERR_',1);  /* set ERROR detection macro variable */
+244            if EFIEOD then call symputx('_EFIREC_',EFIOUT);
+245            run;
+
+NOTE: The file 'H:/qlq-c30_bayes.csv' is:
+      Filename=H:\qlq-c30_bayes.csv,
+      RECFM=V,LRECL=32767,File Size (bytes)=0,
+      Last Modified=26Sep2022:19:23:18,
+      Create Time=26Sep2022:19:23:18
+
+NOTE: 30001 records were written to the file 'H:/qlq-c30_bayes.csv'.
+      The minimum record length was 326.
+      The maximum record length was 1004.
+NOTE: There were 30000 observations read from the data set WORK.QLQC30_DATA_POST.
+NOTE: DATA statement used (Total process time):
+      real time           0.27 seconds
+      cpu time            0.15 seconds
+      
+
+30000 records created in H:/qlq-c30_bayes.csv from QLQC30_DATA_POST.
+  
+  
+NOTE: "H:/qlq-c30_bayes.csv" file was successfully created.
+NOTE: PROCEDURE EXPORT used (Total process time):
+      real time           0.32 seconds
+      cpu time            0.20 seconds
+      
+
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           5.74 seconds
+      cpu time            5.53 seconds
+      
