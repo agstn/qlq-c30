@@ -620,73 +620,73 @@ g(var = "QL")
 ```
 
 # (PF) Physical Functioning {data-navmenu="FUNCTIONAL"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "PF")
 ```
 
 # (RF) Role Functioning {data-navmenu="FUNCTIONAL"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "RF")
 ```
 
 # (EF) Emotional Functioning {data-navmenu="FUNCTIONAL"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "EF")
 ```
 
 # (CF) Cognitive Functioning {data-navmenu="FUNCTIONAL"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "CF")
 ```
 
 # (SF) Social Functioning {data-navmenu="FUNCTIONAL"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "SF")
 ```
 
 
 # Fatigue (FA) {data-navmenu="SYMPTOMS"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "FA")
 ```
 
 # Nausea and Vomiting (NV) {data-navmenu="SYMPTOMS"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "NV")
 ```
 
 # Pain (PA) {data-navmenu="SYMPTOMS"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "PA")
 ```
 
 # Dyspnea (DY) {data-navmenu="SYMPTOMS"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "DY")
 ```
 
 # Insomnia (SL) {data-navmenu="SYMPTOMS"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "SL")
 ```
 
 # Appetite loss (AP) {data-navmenu="SYMPTOMS"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "AP")
 ```
 
 # Constipation (CO) {data-navmenu="SYMPTOMS"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "CO")
 ```
 
 # Diarrhea (DI) {data-navmenu="SYMPTOMS"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "DI")
 ```
 
 
 # (FI) Financial Difficulty {data-navmenu="FINANCIAL DIFFICULTY"}
-```{r, fig.height = 8, fig.width = 16, dpi = 150}
+```{r, fig.height = 8, fig.width = 16, dpi = 120}
 g(var = "FI")
 ```
